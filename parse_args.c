@@ -11,9 +11,11 @@ char* make_copy(char* str) {
 }
 
 // Returns the number of substrings the array is split into
-size_t replace_spaces_with_nulls(char* str, char* end) {
+size_t replace_spaces_with_nulls(char* str) {
   size_t num_substrings;
-  for (num_substrings = 0; str != end; num_substrings++) {
+  // Note: strsep sets str to NULL once it reaches a NULL
+  // that it didn't place there itself.
+  for (num_substrings = 0; str; num_substrings++) {
     strsep(&str, " ");
   }
   return num_substrings;
@@ -21,16 +23,13 @@ size_t replace_spaces_with_nulls(char* str, char* end) {
 
 char** parse_args(char* line) {
   char* line_copy = make_copy(line);
-  size_t line_len = strlen(line_copy);
-
-  char* end = line_copy + line_len;
-  size_t num_substrings = replace_spaces_with_nulls(line_copy, end);
+  size_t num_substrings = replace_spaces_with_nulls(line_copy);
   char** args_buf = malloc(num_substrings + 1);
   args_buf[num_substrings] = NULL;
   
   char* cur_ptr = line_copy;
   size_t i;
-  for (i = 0; cur_ptr != end; i++) {
+  for (i = 0; i < num_substrings; i++) {
     args_buf[i] = cur_ptr;
     cur_ptr = cur_ptr + strlen(cur_ptr) + 1;
   }

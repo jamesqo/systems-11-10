@@ -1,4 +1,9 @@
 CFLAGS:=-Wall -Werror
+DEBUG:=false
+
+ifeq ($(DEBUG),true)
+	CFLAGS:=$(CFLAGS) -g
+endif
 
 all: main
 
